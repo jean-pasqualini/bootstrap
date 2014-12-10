@@ -29,13 +29,27 @@
     this.$backdrop =
     this.isShown   = null
 
-    if (this.options.remote) this.$element.load(this.options.remote)
+    onLoadRemote = (function()
+    {
+        if(typeof this.options.view != "undefined")
+        {
+          require([this.options.view], function(InstanceOfView)
+          {
+              var instanceOfView = new InstanceOfView({el: this.$element[0]});
+          });
+        }
+    }).bind(this);
+
+    if (this.options.remote) this.$element.load(this.options.remote, onLoadRemote);
+    
+    if (this.option)
   }
 
   Modal.DEFAULTS = {
       backdrop: true
     , keyboard: true
-    , show: true
+    , show: true,
+      view: false
   }
 
   Modal.prototype.toggle = function (_relatedTarget) {
